@@ -164,7 +164,7 @@ export const GAME_CONFIG = {
   WORLD_HEIGHT: 3000,
   
   // Tick rate
-  SERVER_TICK_RATE: 20, // 20 Hz server updates
+  SERVER_TICK_RATE: 30, // 30 Hz server updates
   CLIENT_RENDER_FPS: 60,
   
   // Snake
