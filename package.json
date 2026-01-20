@@ -2,7 +2,7 @@
   "name": "snake-io-multiplayer-root",
   "version": "1.0.0",
   "scripts": {
-    "start": "cd server && npm install && npm run build && npm start",
+    "start": "cd server && npm install --include=dev && npm run build && npm start",
     "build": "echo 'Building...'",
     "postinstall": "cd server && npm install"
   },
