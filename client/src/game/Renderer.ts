@@ -11,7 +11,10 @@ import {
 export class Renderer {
   private ctx: CanvasRenderingContext2D;
   private camera: Camera;
-  private isMobile: boolean;
+  constructor(ctx: CanvasRenderingContext2D, camera: Camera) {
+    this.ctx = ctx;
+    this.camera = camera;
+  }
 
   // Grid settings
   private gridSize: number = 50;
@@ -24,12 +27,6 @@ export class Renderer {
     magnet: '🧲',
     slow_others: '🐌'
   };
-
-  constructor(ctx: CanvasRenderingContext2D, camera: Camera) {
-    this.ctx = ctx;
-    this.camera = camera;
-    this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-  }
 
   drawGrid(worldSize: { width: number; height: number }): void {
     const viewport = this.camera.getViewport();
