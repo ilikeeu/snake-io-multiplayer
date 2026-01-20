@@ -153,8 +153,12 @@ export class Game {
     const deltaTime = (currentTime - this.lastFrameTime) / 1000;
     this.lastFrameTime = currentTime;
     
-    this.update(deltaTime);
-    this.render();
+    try {
+      this.update(deltaTime);
+      this.render();
+    } catch (e) {
+      console.error('Game loop error:', e);
+    }
     
     this.animationFrameId = requestAnimationFrame(() => this.gameLoop());
   }

@@ -76,7 +76,9 @@ export class Renderer {
   }
 
   drawSnake(snake: Snake, isCurrentPlayer: boolean): void {
-    if (snake.segments.length === 0) return;
+    if (!snake || !snake.segments || snake.segments.length === 0) return;
+    if (!snake.color) snake.color = { r: 255, g: 255, b: 255 }; // Fallback color
+    if (!snake.gradientColor) snake.gradientColor = { r: 200, g: 200, b: 200 }; // Fallback gradient
     
     const ctx = this.ctx;
     const segments = snake.segments;
@@ -84,6 +86,7 @@ export class Renderer {
     // Draw body segments (back to front)
     for (let i = segments.length - 1; i >= 0; i--) {
       const segment = segments[i];
+      if (!segment || !segment.position) continue;
       
       // Simple culling - check if segment is in viewport (with margin)
       if (!this.camera.isVisible(segment.position, segment.radius + 10)) {

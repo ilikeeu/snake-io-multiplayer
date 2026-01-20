@@ -176,7 +176,7 @@ export const GAME_CONFIG = {
   SNAKE_SEGMENT_SPACING: 8,
   
   // Food
-  FOOD_COUNT: 500,
+  FOOD_COUNT: 300,
   FOOD_RADIUS_MIN: 5,
   FOOD_RADIUS_MAX: 12,
   FOOD_VALUE_MIN: 1,
@@ -196,13 +196,13 @@ export const GAME_CONFIG = {
   
   // Collision
   HEAD_COLLISION_RADIUS: 15,
-  BODY_COLLISION_CHECK_COUNT: 20, // Check last N segments
+  BODY_COLLISION_CHECK_COUNT: 10, // Reduced from 20 for performance
   
   // Leaderboard
   LEADERBOARD_SIZE: 10,
   
   // Bots
-  BOT_COUNT: 8,
+  BOT_COUNT: 5, // Reduced from 8
   BOT_RESPAWN_DELAY: 3000, // 3 seconds after death
   BOT_DECISION_INTERVAL: 100, // ms between AI decisions
 } as const;
