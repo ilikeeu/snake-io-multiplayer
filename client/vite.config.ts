@@ -3,6 +3,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 import path from 'path';
 
 export default defineConfig({
+  base: '/snake-io-multiplayer/',
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
@@ -43,5 +44,5 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false
   },
-  base: './' // For GitHub Pages compatibility
+
 });
