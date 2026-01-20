@@ -80,7 +80,10 @@
   <div id="hud" class="hidden">
     <!-- Leaderboard -->
     <div id="leaderboard">
-      <h3>🏆 Leaderboard</h3>
+      <div class="leaderboard-header">
+        <h3>🏆 Leaderboard</h3>
+        <button id="leaderboardToggle" class="toggle-btn">▼</button>
+      </div>
       <ol id="leaderboardList"></ol>
     </div>
     
@@ -111,7 +114,7 @@
   
   <!-- Mobile Controls -->
   <div id="mobileControls" class="hidden">
-    <div id="joystickZone"></div>
+    <!-- Joystick removed, entire screen is touch area now -->
     <button id="boostButton" class="boost-btn">🚀</button>
   </div>
   

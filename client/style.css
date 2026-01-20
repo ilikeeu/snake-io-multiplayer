@@ -309,17 +309,66 @@ html, body {
   padding: var(--spacing-md);
   border-radius: var(--radius-md);
   min-width: 180px;
+  transition: all 0.3s ease;
+}
+
+#leaderboard.collapsed {
+  min-width: auto;
+  width: auto;
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-sm);
+  gap: var(--spacing-md);
+}
+
+#leaderboard.collapsed .leaderboard-header {
+  margin-bottom: 0;
 }
 
 #leaderboard h3 {
   font-size: 0.9rem;
   color: var(--text-secondary);
-  margin-bottom: var(--spacing-sm);
+  margin: 0;
+  white-space: nowrap;
+}
+
+#leaderboard.collapsed h3 {
+  display: none; /* Hide title when collapsed to just show icon or abbreviation if needed, or keep it */
+}
+/* Let's keep the title but hide the list */
+#leaderboard.collapsed h3 {
+  display: block;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 4px;
+  transition: transform 0.3s;
+}
+
+#leaderboard.collapsed .toggle-btn {
+  transform: rotate(-90deg);
 }
 
 #leaderboardList {
   list-style: none;
   font-size: 0.85rem;
+  max-height: 200px;
+  overflow-y: auto;
+  transition: opacity 0.3s;
+}
+
+#leaderboard.collapsed #leaderboardList {
+  display: none;
 }
 
 #leaderboardList li {

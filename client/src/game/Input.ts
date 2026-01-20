@@ -47,39 +47,61 @@ export class Input {
   }
 
   private setupTouchListeners(): void {
-    const joystickZone = document.getElementById('joystickZone');
-    if (!joystickZone) return;
+    // Touch everywhere on screen
+    const touchZone = this.canvas;
+    
+    // Prevent default touch actions (scrolling)
+    document.body.addEventListener('touchstart', (e) => {
+       if (e.target === this.canvas || e.target === document.getElementById('mobileControls')) {
+         e.preventDefault();
+       }
+    }, { passive: false });
 
-    let joystickActive = false;
-
-    joystickZone.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      const touch = e.touches[0];
-      joystickActive = true;
+    touchZone.addEventListener('touchstart', (e) => {
+      // e.preventDefault(); // Handled by body listener
       this.isTouching = true;
-      
-      this.touchX = touch.clientX;
-      this.touchY = touch.clientY;
-    });
-
-    joystickZone.addEventListener('touchmove', (e) => {
-      e.preventDefault();
-      if (!joystickActive) return;
-      
       const touch = e.touches[0];
       this.touchX = touch.clientX;
       this.touchY = touch.clientY;
-    });
+    }, { passive: false });
 
-    joystickZone.addEventListener('touchend', () => {
-      joystickActive = false;
+    touchZone.addEventListener('touchmove', (e) => {
+      // e.preventDefault();
+      if (!this.isTouching) return;
+      const touch = e.touches[0];
+      this.touchX = touch.clientX;
+      this.touchY = touch.clientY;
+    }, { passive: false });
+
+    touchZone.addEventListener('touchend', () => {
+      this.isTouching = false;
+    });
+    
+    touchZone.addEventListener('touchcancel', () => {
       this.isTouching = false;
     });
 
-    joystickZone.addEventListener('touchcancel', () => {
-      joystickActive = false;
-      this.isTouching = false;
-    });
+    // Also listen on mobileControls layer
+    const mobileControls = document.getElementById('mobileControls');
+    if (mobileControls) {
+        mobileControls.addEventListener('touchstart', (e) => {
+            this.isTouching = true;
+            const touch = e.touches[0];
+            this.touchX = touch.clientX;
+            this.touchY = touch.clientY;
+        });
+
+        mobileControls.addEventListener('touchmove', (e) => {
+            if (!this.isTouching) return;
+            const touch = e.touches[0];
+            this.touchX = touch.clientX;
+            this.touchY = touch.clientY;
+        });
+
+        mobileControls.addEventListener('touchend', () => {
+            this.isTouching = false;
+        });
+    }
   }
 
   private setupKeyboardListeners(): void {
@@ -120,29 +142,28 @@ export class Input {
     let targetX: number;
     let targetY: number;
 
+    const viewport = camera.getViewport();
+    
+    // Get center of screen (player head position)
+    const centerX = viewport.x + viewport.width / 2;
+    const centerY = viewport.y + viewport.height / 2;
+
     if (this.isMobile && this.isTouching) {
-      // Use touch position relative to joystick center
-      const joystickZone = document.getElementById('joystickZone');
-      if (joystickZone) {
-        const rect = joystickZone.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        
-        const dx = this.touchX - centerX;
-        const dy = this.touchY - centerY;
-        
-        return Math.atan2(dy, dx);
-      }
+      // Calculate angle from center of screen to touch point
+      // Touch coordinates are screen coordinates (0,0 is top-left of canvas)
+      // We need to convert screen center to screen coordinates for comparison
+      const screenCenterX = window.innerWidth / 2;
+      const screenCenterY = window.innerHeight / 2;
+      
+      const dx = this.touchX - screenCenterX;
+      const dy = this.touchY - screenCenterY;
+      
+      return Math.atan2(dy, dx);
     }
 
     // Use mouse position
-    const viewport = camera.getViewport();
     targetX = this.mouseX + viewport.x;
     targetY = this.mouseY + viewport.y;
-
-    // Get player head position (center of screen)
-    const centerX = viewport.x + viewport.width / 2;
-    const centerY = viewport.y + viewport.height / 2;
 
     const dx = targetX - centerX;
     const dy = targetY - centerY;
@@ -156,5 +177,10 @@ export class Input {
 
   getMousePosition(): { x: number; y: number } {
     return { x: this.mouseX, y: this.mouseY };
+  }
+  
+  getTouchPosition(): { x: number; y: number } | null {
+    if (!this.isTouching) return null;
+    return { x: this.touchX, y: this.touchY };
   }
 }

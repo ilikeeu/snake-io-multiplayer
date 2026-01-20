@@ -78,44 +78,79 @@ export class Renderer {
     
     const ctx = this.ctx;
     const segments = snake.segments;
+    const viewport = this.camera.getViewport();
+    
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
     // Draw body segments (back to front)
     for (let i = segments.length - 1; i >= 0; i--) {
       const segment = segments[i];
+      
+      // Simple culling - check if segment is in viewport (with margin)
+      if (!this.camera.isVisible(segment.position, segment.radius + 10)) {
+        continue;
+      }
+      
       const t = i / segments.length; // 0 at head, 1 at tail
-      
-      // Create gradient between two colors
-      const gradient = ctx.createRadialGradient(
-        segment.position.x, segment.position.y, 0,
-        segment.position.x, segment.position.y, segment.radius
-      );
-      
-      // Fade from primary to gradient color along body
-      const primaryColor = colorToRgba(snake.color, 1 - t * 0.5);
-      const secondaryColor = colorToRgba(snake.gradientColor, 0.8);
-      
-      gradient.addColorStop(0, primaryColor);
-      gradient.addColorStop(1, secondaryColor);
       
       ctx.beginPath();
       ctx.arc(segment.position.x, segment.position.y, segment.radius, 0, Math.PI * 2);
-      ctx.fillStyle = gradient;
-      ctx.fill();
       
-      // Add glow for current player
-      if (isCurrentPlayer && i === 0) {
-        ctx.shadowColor = colorToRgb(snake.color);
-        ctx.shadowBlur = 15;
+      if (isMobile) {
+        // Simple color for mobile
+        const primaryColor = colorToRgba(snake.color, 1 - t * 0.5);
+        ctx.fillStyle = primaryColor;
         ctx.fill();
-        ctx.shadowBlur = 0;
+      } else {
+        // Gradient for desktop
+        const gradient = ctx.createRadialGradient(
+          segment.position.x, segment.position.y, 0,
+          segment.position.x, segment.position.y, segment.radius
+        );
+        
+        const primaryColor = colorToRgba(snake.color, 1 - t * 0.5);
+        const secondaryColor = colorToRgba(snake.gradientColor, 0.8);
+        
+        gradient.addColorStop(0, primaryColor);
+        gradient.addColorStop(1, secondaryColor);
+        ctx.fillStyle = gradient;
+        ctx.fill();
+        
+        // Add glow for current player (desktop only)
+        if (isCurrentPlayer && i === 0) {
+          ctx.shadowColor = colorToRgb(snake.color);
+          ctx.shadowBlur = 15;
+          ctx.fill();
+          ctx.shadowBlur = 0;
+        }
       }
     }
     
     // Draw eyes on head
-    this.drawSnakeEyes(snake);
+    if (this.camera.isVisible(snake.segments[0].position, 50)) {
+      this.drawSnakeEyes(snake);
+      this.drawSnakeName(snake, isCurrentPlayer);
+    }
+  }
+
+  drawTouchIndicator(position: { x: number; y: number }): void {
+    const ctx = this.ctx;
     
-    // Draw name above head
-    this.drawSnakeName(snake, isCurrentPlayer);
+    // Convert screen coordinates to canvas coordinates (since we are drawing on UI layer effectively)
+    // But Render.drawGrid uses ApplyCamera, so the context might be transformed.
+    // Actually, drawTouchIndicator should be called AFTER camera.reset().
+    
+    // We assume this is called after camera reset (screen space)
+    ctx.beginPath();
+    ctx.arc(position.x, position.y, 20, 0, Math.PI * 2);
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    ctx.beginPath();
+    ctx.arc(position.x, position.y, 10, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.fill();
   }
 
   private drawSnakeEyes(snake: Snake): void {

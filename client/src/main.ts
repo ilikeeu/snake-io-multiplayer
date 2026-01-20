@@ -13,6 +13,15 @@ const mobileControls = document.getElementById('mobileControls') as HTMLDivEleme
 const fullscreenBtn = document.getElementById('fullscreenBtn') as HTMLButtonElement;
 const finalScore = document.getElementById('finalScore') as HTMLSpanElement;
 const finalLength = document.getElementById('finalLength') as HTMLSpanElement;
+const leaderboardToggle = document.getElementById('leaderboardToggle') as HTMLButtonElement;
+const leaderboard = document.getElementById('leaderboard') as HTMLDivElement;
+
+if (leaderboardToggle && leaderboard) {
+  leaderboardToggle.addEventListener('click', () => {
+    leaderboard.classList.toggle('collapsed');
+    leaderboardToggle.textContent = leaderboard.classList.contains('collapsed') ? '◀' : '▼';
+  });
+}
 
 // Initialize game and skin selector
 const game = new Game();

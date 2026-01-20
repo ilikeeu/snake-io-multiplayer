@@ -214,7 +214,7 @@ export class GameServer {
       while (diff > Math.PI) diff -= Math.PI * 2;
       
       // Limit turn speed (e.g., 0.15 radians per tick)
-      const TURN_SPEED = 0.15;
+      const TURN_SPEED = Math.PI / 8;
       
       if (Math.abs(diff) < TURN_SPEED) {
         player.snake.direction = targetDir;

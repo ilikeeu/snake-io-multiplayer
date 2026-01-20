@@ -220,6 +220,12 @@ export class Game {
     // Reset camera transform
     this.camera.reset(this.ctx);
     
+    // Draw touch indicator (mobile only)
+    const touchPos = this.input.getTouchPosition();
+    if (touchPos) {
+      this.renderer.drawTouchIndicator(touchPos);
+    }
+
     // Draw minimap
     this.drawMinimap(currentPlayer);
   }
