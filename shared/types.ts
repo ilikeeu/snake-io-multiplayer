@@ -184,13 +184,15 @@ export const GAME_CONFIG = {
   SNAKE_REMAINS_VALUE_MULTIPLIER: 2,
   
   // Power-ups
-  POWERUP_SPAWN_INTERVAL: 10000, // 10 seconds
-  POWERUP_MAX_COUNT: 10,
+  //POWERUP_SPAWN_INTERVAL: 10000, // 10 seconds
+  POWERUP_SPAWN_INTERVAL: 2000, // 10 seconds
+ // POWERUP_MAX_COUNT: 10,
+  POWERUP_MAX_COUNT: 100,
   POWERUP_RADIUS: 20,
   POWERUP_DURATIONS: {
-    shield: 5000,
-    speed: 8000,
-    magnet: 10000,
+    shield: 15000,
+    speed: 18000,
+    magnet: 100000,
     slow_others: 6000,
   } as Record<PowerUpType, number>,
   
