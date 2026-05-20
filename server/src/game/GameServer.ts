@@ -345,10 +345,34 @@ export class GameServer {
       
       if (dist < GAME_CONFIG.HEAD_COLLISION_RADIUS + powerUp.radius) {
         // Collect power-up
-        player.activePowerUps.push({
-          type: powerUp.type,
-          expiresAt: Date.now() + powerUp.duration
-        });
+        const now = Date.now();
+        
+        const existing = player.activePowerUps.find(
+          p => p.type === powerUp.type
+        );
+        
+        if (existing) {
+        
+          const remaining = Math.max(
+            0,
+            existing.expiresAt - now
+          );
+        
+          const MAX_DURATION = 300000; // 5分钟
+        
+          existing.expiresAt = Math.min(
+            now + remaining + powerUp.duration,
+            now + MAX_DURATION
+          );
+        
+        } else {
+        
+          player.activePowerUps.push({
+            type: powerUp.type,
+            expiresAt: now + powerUp.duration
+          });
+        
+        }
         
         this.powerUps.delete(powerUpId);
         console.log(`⚡ ${player.name} collected ${powerUp.type}`);
