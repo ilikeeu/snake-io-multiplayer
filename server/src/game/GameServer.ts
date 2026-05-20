@@ -468,7 +468,7 @@ export class GameServer {
 
   private dropSnakeAsFood(snake: Snake): void {
     // Drop food at each segment position
-    const dropRate = 1; // Every 3rd segment
+    const dropRate = 3; // Every 3rd segment
     for (let i = 0; i < snake.segments.length; i += dropRate) {
       const segment = snake.segments[i];
       const value = GAME_CONFIG.FOOD_VALUE_MAX * GAME_CONFIG.SNAKE_REMAINS_VALUE_MULTIPLIER;
